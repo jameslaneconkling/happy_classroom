@@ -5,7 +5,7 @@ disjoint(Set, [Head|Tail], Disjoint) :-
     delete(Set, Head, RemainingDisjoint),
     disjoint(RemainingDisjoint, Tail, Disjoint).
 
-% compute N Choose K
+% compute N Choose K as a subset
 choose(_, 0, []).
 choose([Head|Tail], K, [Head|Sublist]) :-  % add Head to Sublist
     K1 is -(K, 1),
@@ -13,6 +13,9 @@ choose([Head|Tail], K, [Head|Sublist]) :-  % add Head to Sublist
 choose([_|Tail], K, Sublist) :-      % don't add Head to Sublist
     K > 0,                                    % make sure this rule doesn't duplicate the basecase
     choose(Tail, K, Sublist).
+
+% compute N Choose K as a count of all possible subsets
+%% choose_count(N, )
 
 % compute N Choose K, w/ the constraint that the first element be included in all sublists
 % this maintains sort order across multiple sublist groups, preventing duplicates such as:
@@ -24,10 +27,10 @@ choose([_|Tail], K, Sublist) :-      % don't add Head to Sublist
 % X = [[2,3],[1,4]];
 % X = [[2,4],[1,3]];
 % X = [[3,4],[1,2]];
+%% TODO - this only works if all groups are of the same size.  So, we can pad population so that it is evenly divisible by K and ensure no group has more than one filler people
 choose_first([Head|Tail], K, [Head|SubList]) :-
     K1 is -(K, 1),
     choose(Tail, K1, SubList).
-%% TODO - this only works if all groups are of the same size.  So, we can pad population so that it is evenly divisible by K and ensure no group has more than one filler people
 
 
 % group all elements in a set into a set of all possible subsets of size = K or size = ()K - 1)
@@ -58,9 +61,12 @@ groups_cost([Group|Rest], Cost) :-
     groups_cost(Rest, RestCost),
     Cost is +(GroupCost, RestCost).
 
-groups_with_cost(List, K, Groups) :-
+classroom(List, K, Groups) :-
     choose_all(List, K, GroupsWithoutCost),
     groups_cost(GroupsWithoutCost, Cost),
     Groups = groups(GroupsWithoutCost, Cost).
 
-asdfasdf;
+
+%% classroom_solution_count(List, K, Groups) :-
+% count(N, K) -> ((N - 1) choose (K - 1)) * ((N - K - 1) choose (K - 1)) * ((N - 2K - 1) choose (K - 1)) * ...
+% assuming N is evenly divisible by K.  If not, round up to the nearest multiple?
