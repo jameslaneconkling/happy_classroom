@@ -35,14 +35,14 @@ choose_all([], _, []).
 choose_all(List, K, [SubList|SubLists]) :-        % List is evenly dividable by K
     length(List, ListLength),
     0 is mod(ListLength, K),
-    choose(List, K, SubList),
+    choose_first(List, K, SubList),
     disjoint(List, SubList, RemainingList),
     choose_all(RemainingList, K, SubLists).
 choose_all(List, K, [SubList|SubLists]) :-        % List is not evenly dividable by K; create a subgroup of size K - 1
     length(List, ListLength),
     mod(ListLength, K) > 0,
     K1 is -(K, 1),
-    choose(List, K1, SubList),
+    choose_first(List, K1, SubList),
     disjoint(List, SubList, RemainingList),
     choose_all(RemainingList, K, SubLists).
 
@@ -62,3 +62,5 @@ groups_with_cost(List, K, Groups) :-
     choose_all(List, K, GroupsWithoutCost),
     groups_cost(GroupsWithoutCost, Cost),
     Groups = groups(GroupsWithoutCost, Cost).
+
+asdfasdf;
