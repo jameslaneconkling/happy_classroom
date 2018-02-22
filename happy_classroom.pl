@@ -50,10 +50,16 @@ choose_all(List, K, [SubList|SubLists]) :-        % List is not evenly dividable
     choose_all(RemainingList, K, SubLists).
 
 % sum group according to cost function
-group_cost([p(Cost)], Cost).
-group_cost([p(Cost)|Rest], TotalCost) :-
+% NOTE - this will become more involved
+person_cost(p(Cost), Cost).
+
+group_cost([Person], Cost) :-
+    person_cost(Person, Cost).
+group_cost([Person|Rest], TotalCost) :-
+    person_cost(Person, Cost),
     group_cost(Rest, RestCost),
     TotalCost is +(Cost + RestCost).
+
 groups_cost([Group], Cost) :-
     group_cost(Group, Cost).
 groups_cost([Group|Rest], Cost) :-
