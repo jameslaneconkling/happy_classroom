@@ -45,3 +45,20 @@ choose_all(List, K, [SubList|SubLists]) :-        % List is not evenly dividable
     choose(List, K1, SubList),
     disjoint(List, SubList, RemainingList),
     choose_all(RemainingList, K, SubLists).
+
+% sum group according to cost function
+group_cost([p(Cost)], Cost).
+group_cost([p(Cost)|Rest], TotalCost) :-
+    group_cost(Rest, RestCost),
+    TotalCost is +(Cost + RestCost).
+groups_cost([Group], Cost) :-
+    group_cost(Group, Cost).
+groups_cost([Group|Rest], Cost) :-
+    group_cost(Group, GroupCost),
+    groups_cost(Rest, RestCost),
+    Cost is +(GroupCost, RestCost).
+
+groups_with_cost(List, K, Groups) :-
+    choose_all(List, K, GroupsWithoutCost),
+    groups_cost(GroupsWithoutCost, Cost),
+    Groups = groups(GroupsWithoutCost, Cost).
