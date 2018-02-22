@@ -27,6 +27,8 @@ choose([_|Tail], K, Sublist) :-      % don't add Head to Sublist
 choose_first([Head|Tail], K, [Head|SubList]) :-
     K1 is -(K, 1),
     choose(Tail, K1, SubList).
+%% TODO - this only works if all groups are of the same size.  So, we can pad population so that it is evenly divisible by K and ensure no group has more than one filler people
+
 
 % group all elements in a set into a set of all possible subsets of size = K or size = ()K - 1)
 choose_all([], _, []).
